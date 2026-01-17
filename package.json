@@ -1,0 +1,25 @@
+{
+  "name": "playwright-e2e-saucedemo",
+  "version": "1.0.0",
+  "description": "This project demonstrates an end-to-end automation framework built using **Playwright + javascript**.",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chaudharyvidhi07/playwright-e2e-saucedemo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chaudharyvidhi07/playwright-e2e-saucedemo/issues"
+  },
+  "homepage": "https://github.com/chaudharyvidhi07/playwright-e2e-saucedemo#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "@types/node": "^25.0.9"
+  },
+  "dependencies": {
+    "node": "^25.3.0"
+  }
+}
