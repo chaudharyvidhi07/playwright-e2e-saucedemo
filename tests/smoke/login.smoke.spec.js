@@ -1,8 +1,8 @@
 const { test, expect } = require('@playwright/test');
-const { LoginPage } = require('../../pages/loginPage');
-const { ProductsPage } = require('../../pages/productsPage');
+const { LoginPage } = require('../../pages/LoginPage');
+const { ProductsPage } = require('../../pages/ProductsPage');
 
-test.describe('@smoke Login', () => {
+test.describe('@smoke @login', () => {
   test('User can login successfully', async ({ page }) => {
     const loginPage = new LoginPage(page);
     const productsPage = new ProductsPage(page);
