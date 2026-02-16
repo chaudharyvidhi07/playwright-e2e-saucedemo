@@ -1,6 +1,10 @@
 const { test, expect, request } = require('@playwright/test');
 const fs = require('fs');
 
+if (!fs.existsSync('.auth')) {
+  fs.mkdirSync('.auth');
+}
+
 test('Authenticate and save storage state', async ({ browser }) => {
   const context = await browser.newContext();
   const page = await context.newPage();
