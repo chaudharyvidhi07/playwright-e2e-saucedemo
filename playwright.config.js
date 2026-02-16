@@ -12,6 +12,12 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
+
+const baseURL =
+  process.env.TEST_ENV === 'prod'
+    ? 'https://www.saucedemo.com'
+    : 'https://www.saucedemo.com'; // can change with different environments
+
 export default defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
@@ -21,12 +27,13 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? undefined : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    baseURL: 'https://www.saucedemo.com/',
+    baseURL,
+    storageState: '.auth/storageState.json',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure'
@@ -41,8 +48,7 @@ export default defineConfig({
     {
       name: 'chromium',
       use: {
-        ...devices['Desktop Chrome'],
-        storageState: 'storageState.json',
+        ...devices['Desktop Chrome']
       },
       dependencies: ['setup'],
     },
@@ -50,7 +56,6 @@ export default defineConfig({
       name: 'firefox',
       use: {
         ...devices['Desktop Firefox'],
-        storageState: 'storageState.json',
       },
       dependencies: ['setup'],
     },
@@ -58,7 +63,6 @@ export default defineConfig({
       name: 'webkit',
       use: {
         ...devices['Desktop Safari'],
-        storageState: 'storageState.json',
       },
       dependencies: ['setup'],
     },
