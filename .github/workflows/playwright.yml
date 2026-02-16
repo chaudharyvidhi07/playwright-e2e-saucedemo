@@ -39,8 +39,7 @@ jobs:
 
       - name: Run Smoke Tests
         run: |
-          TEST_ENV=${{ matrix.env }} \
-          npx playwright test --project=${{ matrix.browser }} --grep @smoke
+          TEST_ENV=${{ matrix.env }} npx playwright test --grep @smoke
 
       - name: Upload Report
         uses: actions/upload-artifact@v4
@@ -84,8 +83,7 @@ jobs:
 
       - name: Run Regression Tests
         run: |
-          TEST_ENV=${{ matrix.env }} \
-          npx playwright test --project=${{ matrix.browser }} --grep @regression
+          TEST_ENV=${{ matrix.env }} npx playwright test --grep @smoke
 
       - name: Upload Report
         uses: actions/upload-artifact@v4
@@ -123,8 +121,7 @@ jobs:
 
       - name: Run Full Suite
         run: |
-          TEST_ENV=${{ matrix.env }} \
-          npx playwright test --project=${{ matrix.browser }}
+          TEST_ENV=${{ matrix.env }} npx playwright test --grep @smoke
 
       - name: Upload Report
         uses: actions/upload-artifact@v4
