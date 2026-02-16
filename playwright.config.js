@@ -41,6 +41,23 @@ export default defineConfig({
     {
       name: 'chromium',
       use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'storageState.json',
+      },
+      dependencies: ['setup'],
+    },
+    {
+      name: 'firefox',
+      use: {
+        ...devices['Desktop Firefox'],
+        storageState: 'storageState.json',
+      },
+      dependencies: ['setup'],
+    },
+    {
+      name: 'webkit',
+      use: {
+        ...devices['Desktop Safari'],
         storageState: 'storageState.json',
       },
       dependencies: ['setup'],
