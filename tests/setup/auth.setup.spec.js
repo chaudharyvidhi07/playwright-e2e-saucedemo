@@ -12,6 +12,6 @@ test('Authenticate and save storage state', async ({ browser }) => {
 
   await expect(page).toHaveURL(/inventory.html/);
 
-  await context.storageState({ path: 'storageState.json' });
+  await context.storageState({ path: '.auth/storageState.json' });
   await context.close();
 });
