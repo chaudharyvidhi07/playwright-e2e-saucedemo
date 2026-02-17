@@ -2,10 +2,10 @@ name: Playwright Tests
 
 on:
   pull_request:
-    branches: [ develop ]
+    branches: [ develop, main ]
 
   push:
-    branches: [ main ]
+    branches: [ develop, main ]
 
   schedule:
     - cron: '0 2 * * *'
@@ -13,16 +13,13 @@ on:
 jobs:
 
   smoke:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         browser: [chromium, firefox, webkit]
         env: [staging]
 
-    timeout-minutes: 30
-
     steps:
       - uses: actions/checkout@v4
 
@@ -31,102 +28,76 @@ jobs:
           node-version: lts/*
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+      - run: npm ci
+      - run: npx playwright install --with-deps
 
       - name: Run Smoke Tests
         run: |
-          TEST_ENV=${{ matrix.env }} npx playwright test --grep @smoke
+          TEST_ENV=${{ matrix.env }} \
+          npx playwright test --project=${{ matrix.browser }} --grep @smoke
 
-      - name: Upload Report
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: smoke-${{ matrix.browser }}-${{ matrix.env }}
-          path: playwright-report/
-          retention-days: 7
-      - name: Add Test Summary
+      - uses: actions/upload-artifact@v4
         if: always()
-        run: |
-          echo "## 🧪 Smoke Test Summary" >> $GITHUB_STEP_SUMMARY
-          echo "Browser: ${{ matrix.browser }}" >> $GITHUB_STEP_SUMMARY
-          echo "Environment: ${{ matrix.env }}" >> $GITHUB_STEP_SUMMARY
+        with:
+          name: smoke-${{ matrix.browser }}
+          path: playwright-report/
 
 
   regression:
-    if: github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         browser: [chromium, firefox, webkit]
         env: [staging, prod]
 
-    timeout-minutes: 45
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+      - run: npm ci
+      - run: npx playwright install --with-deps
 
       - name: Run Regression Tests
         run: |
-          TEST_ENV=${{ matrix.env }} npx playwright test --grep @smoke
+          TEST_ENV=${{ matrix.env }} \
+          npx playwright test --project=${{ matrix.browser }} --grep @regression
 
-      - name: Upload Report
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
+      - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: regression-${{ matrix.browser }}-${{ matrix.env }}
           path: playwright-report/
-          retention-days: 14
 
 
   full-suite:
     if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         browser: [chromium, firefox, webkit]
         env: [staging, prod]
 
-    timeout-minutes: 60
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+      - run: npm ci
+      - run: npx playwright install --with-deps
 
       - name: Run Full Suite
         run: |
-          TEST_ENV=${{ matrix.env }} npx playwright test --grep @smoke
+          TEST_ENV=${{ matrix.env }} \
+          npx playwright test --project=${{ matrix.browser }}
 
-      - name: Upload Report
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
+      - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: full-${{ matrix.browser }}-${{ matrix.env }}
           path: playwright-report/
-          retention-days: 30

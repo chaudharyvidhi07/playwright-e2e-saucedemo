@@ -1,5 +1,5 @@
 const { test, expect, request } = require('@playwright/test');
-const fs = require('fs');
+import fs from 'fs';
 
 if (!fs.existsSync('.auth')) {
   fs.mkdirSync('.auth');
