@@ -33,7 +33,6 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     baseURL,
-    storageState: '.auth/storageState.json',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure'
@@ -43,12 +42,13 @@ export default defineConfig({
   projects: [
     {
       name: 'setup',
-      testMatch: /.*\.setup\.spec\.js/,
+      testMatch: /auth\.setup\.spec\.js/,
     },
     {
       name: 'chromium',
       use: {
-        ...devices['Desktop Chrome']
+        ...devices['Desktop Chrome'],
+        storageState: '.auth/storageState.json',
       },
       dependencies: ['setup'],
     },
@@ -56,6 +56,7 @@ export default defineConfig({
       name: 'firefox',
       use: {
         ...devices['Desktop Firefox'],
+        storageState: '.auth/storageState.json',
       },
       dependencies: ['setup'],
     },
@@ -63,6 +64,7 @@ export default defineConfig({
       name: 'webkit',
       use: {
         ...devices['Desktop Safari'],
+        storageState: '.auth/storageState.json',
       },
       dependencies: ['setup'],
     },
